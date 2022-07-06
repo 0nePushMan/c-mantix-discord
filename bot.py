@@ -72,7 +72,16 @@ class MyClient(discord.Client):
             score = await req_word(first)
 
             if score == True:
-                await message.channel.send(message.author.name + ' a trouvé le mot ' + first + ' 🔥🔥🔥')
+                await message.delete()
+                if len(MyClient.founders) > 0:
+                    for user in MyClient.founders:
+                        if user != message.author.id:
+                            MyClient.founders.append(message.author.id)
+                else:
+                    MyClient.founders.append(message.author.id)
+                if len(MyClient.founders) == 2:
+                    await clearChannel()
+                await message.channel.send(message.author.name + ' a trouvé le mot du jour 🔥🔥🔥')
             elif score == False:
                 await message.channel.send('Je ne connais pas le mot ' + first)
             else:
