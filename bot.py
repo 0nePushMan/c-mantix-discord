@@ -2,6 +2,7 @@ import os
 import discord
 import requests
 import time
+from datetime import date
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -20,17 +21,9 @@ class MyClient(discord.Client):
         if message.channel.id == 994154345778126858 or message.channel.id == 994184781573140493:
             first = message.content.split()[0].lower()
 
-            # async def checkHot(score):
-            #     if len(MyClient.hot) > 0:
-            #         for index, value in MyClient.hot:
-            #             if value[1] < score:
-            #                 MyClient.hot[index] = [first, score, message.id]
-            #                 return True
-            #             else:
-            #                 return False
-            #     else:
-            #         MyClient.hot.append([first, score, message.id])
-            #         return True
+            async def clearChannel():
+                await message.channel.purge()
+                return await message.channel.send('Le mot du ' + str(date.today()) + ' était ' + MyClient.found)
 
             async def temperature(score):
                 if score <= 0:
@@ -55,9 +48,26 @@ class MyClient(discord.Client):
                     return False
                 if "score" in r:
                     if r["score"] == 1:
+                        MyClient.found = first
                         return True
                     else:
                         return r['score'] * 100
+
+            # async def checkHot(score):
+            #     if len(MyClient.hot) > 0:
+            #         for index, value in MyClient.hot:
+            #             if value[1] < score:
+            #                 MyClient.hot[index] = [first, score, message.id]
+            #                 return True
+            #             else:
+            #                 return False
+            #     else:
+            #         MyClient.hot.append([first, score, message.id])
+            #         return True
+
+            if message.content == '/clear':
+                await clearChannel()
+                return
 
             score = await req_word(first)
 
@@ -67,7 +77,7 @@ class MyClient(discord.Client):
                 await message.channel.send('Je ne connais pas le mot ' + first)
             else:
                 temp = await temperature(score)
-                await message.channel.send(message.author.name + ' le mot ' + first + ' a la température de ' + str(round(score, 2)) + '°C  ' + temp)
+                await message.channel.send(message.author.name + ' le mot ' + first + ' a une température de ' + str(round(score, 2)) + '°C  ' + temp)
 
 
 client = MyClient()
