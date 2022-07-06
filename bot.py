@@ -60,9 +60,10 @@ class MyClient(discord.Client):
                         return r['score'] * 100
 
             score = await req_word(first)
+
             if score == True:
-                await message.channel.send(message.author.name + ' a trouvé le mot ' + first)
-            if score == False:
+                await message.channel.send(message.author.name + ' a trouvé le mot ' + first + ' 🔥🔥🔥')
+            elif score == False:
                 await message.channel.send('Je ne connais pas le mot ' + first)
             else:
                 temp = await temperature(score)
