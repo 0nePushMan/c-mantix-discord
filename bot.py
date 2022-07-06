@@ -11,6 +11,9 @@ token = os.environ['token']
 
 class MyClient(discord.Client):
     hot = []
+    found = ''
+    founders = []
+    
     async def on_ready(self):
         print('Logged on as', self.user)
 
